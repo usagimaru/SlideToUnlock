@@ -52,7 +52,6 @@ struct ShimmerText: View {
 			// overlay()より前にpaddingを設定すると、overlay()の大きさも広げられる
 				.padding(.horizontal, horizontalPadding)
 				.padding(.vertical, verticalPadding)
-			
 				.overlay {
 					// GeometryReaderは親Viewの情報を取るため、Textのサイズを取るにはoverlay()の中で使用する
 					GeometryReader { geo in
