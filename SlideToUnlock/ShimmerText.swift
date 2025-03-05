@@ -21,7 +21,7 @@ import SwiftUI
 struct ShimmerText: View {
 	
 	@State var text: String
-	@State var font: Font =  .system(size: 21)
+	@State var font: Font = .system(size: 21)
 	@State var textColor: Color
 	@State var shimmerColors: [Gradient.Stop]?
 	@State var shimmerOffset: CGFloat = 10

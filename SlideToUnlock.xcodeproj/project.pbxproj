@@ -12,6 +12,7 @@
 		518426792D7853DD00DEEB28 /* ShimmerSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518426732D7853DD00DEEB28 /* ShimmerSlider.swift */; };
 		5184267A2D7853DD00DEEB28 /* SlideToUnlockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518426742D7853DD00DEEB28 /* SlideToUnlockApp.swift */; };
 		5184267B2D7853DD00DEEB28 /* ShimmerText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518426752D7853DD00DEEB28 /* ShimmerText.swift */; };
+		5184267F2D78923600DEEB28 /* _IconMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5184267E2D78923600DEEB28 /* _IconMaterial.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		518426732D7853DD00DEEB28 /* ShimmerSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerSlider.swift; sourceTree = "<group>"; };
 		518426742D7853DD00DEEB28 /* SlideToUnlockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToUnlockApp.swift; sourceTree = "<group>"; };
 		518426752D7853DD00DEEB28 /* ShimmerText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerText.swift; sourceTree = "<group>"; };
+		5184267E2D78923600DEEB28 /* _IconMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _IconMaterial.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				518426742D7853DD00DEEB28 /* SlideToUnlockApp.swift */,
 				518426732D7853DD00DEEB28 /* ShimmerSlider.swift */,
 				518426752D7853DD00DEEB28 /* ShimmerText.swift */,
+				5184267E2D78923600DEEB28 /* _IconMaterial.swift */,
 				518426712D7853DD00DEEB28 /* Preview Content */,
 				518426722D7853DD00DEEB28 /* Assets.xcassets */,
 			);
@@ -145,6 +148,7 @@
 			files = (
 				518426792D7853DD00DEEB28 /* ShimmerSlider.swift in Sources */,
 				5184267A2D7853DD00DEEB28 /* SlideToUnlockApp.swift in Sources */,
+				5184267F2D78923600DEEB28 /* _IconMaterial.swift in Sources */,
 				5184267B2D7853DD00DEEB28 /* ShimmerText.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +280,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SlideToUnlock/Preview Content\"";
@@ -306,6 +311,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SlideToUnlock/Preview Content\"";

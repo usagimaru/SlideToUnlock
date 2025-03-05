@@ -10,7 +10,8 @@ import SwiftUI
 #Preview {
 	ZStack {
 		Rectangle()
-			.foregroundStyle(.black)
+			.foregroundStyle(.green)
+			.brightness(-0.5)
 			.ignoresSafeArea()
 		VStack(spacing: 0) {
 			ShimmerSliderComponent(placeholderText: "slide to unlock")
@@ -27,12 +28,22 @@ struct ShimmerSliderComponent: View {
 	@State var backViewHeight: CGFloat = 88
 	@State var horizontalPadding: CGFloat = 30
 	@State var placeholderText: String
+	@State var grooveOpacity: CGFloat = 0.9
+	@State var backOpacity: CGFloat = 0.7
 	
 	var body: some View {
 		ZStack {
-			ShimmerSliderBackView()
+			ShimmerSliderBackView(opacity: $backOpacity)
 				.frame(height: backViewHeight, alignment: .bottom)
-			ShimmerSlider(placeholderText: placeholderText)
+				.overlay {
+					// FIXME: 穴を開けたいが、パラメータを動的に取ってくる構造を考えるのが面倒なので、ハードコーディングした
+					RoundedRectangle(cornerRadius: 12 + 2)
+						//.foregroundStyle(.blue.opacity(0.8)) // for debug
+						.padding(.horizontal, horizontalPadding + 2)
+						.padding(.vertical, (backViewHeight - 44 - 4) / 2)
+						.blendMode(.destinationOut)
+				}
+			ShimmerSlider(placeholderText: placeholderText, opacity: $grooveOpacity)
 				.padding(.horizontal, horizontalPadding)
 		}
 	}
@@ -46,6 +57,7 @@ struct ShimmerSlider: View {
 	@State var cornerRadius: CGFloat = 12
 	@State var knobSize: CGSize = .init(width: 68, height: 44)
 	@State var groovePadding: CGFloat = 4
+	@Binding var opacity: CGFloat
 	
 	@State private var isAnimated: Bool = false
 	@State private var offset: CGFloat = 0
@@ -55,6 +67,7 @@ struct ShimmerSlider: View {
 		ZStack {
 			SliderGroove(placeholderText: $placeholderText, cornerRadius: cornerRadius + groovePadding, shimmerOpacity: $shimmerOpacity)
 				.frame(height: knobSize.height + groovePadding * 2)
+				.opacity(opacity)
 				.overlay {
 					GeometryReader { geo in
 						SliderKnob(cornerRadius: cornerRadius)
@@ -92,6 +105,8 @@ struct ShimmerSlider: View {
 /// スライダー背景ビュー
 struct ShimmerSliderBackView: View {
 	
+	@Binding var opacity: CGFloat
+	
 	var body: some View {
 		ZStack {
 			LinearGradient(stops: [
@@ -113,7 +128,7 @@ struct ShimmerSliderBackView: View {
 					.clipped()
 			}
 		}
-		.opacity(0.95)
+		.opacity(opacity)
 	}
 }
 
