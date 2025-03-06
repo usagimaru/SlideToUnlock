@@ -2,8 +2,7 @@
 
 A replication of the “slide to unlock” UI (slider and shimmer text) that existed before iOS 6, it is completely made with SwiftUI. Remember the feel of pixel materials in those days and soak in nostalgia.
 
-<img src="./screenshot.png" width=230 height=500> 
-<img src="./screenshot2.jpg" width=271 height=500>
+<img src="./screenshot.jpg" width=500> 
 
 ## Notes:
 
