@@ -15,6 +15,7 @@ import SwiftUI
 			.ignoresSafeArea()
 		VStack(spacing: 0) {
 			ShimmerSliderComponent(properties: .init(placeholderText: "slide to unlock"))
+			ShimmerSliderComponent(properties: .init(placeholderText: "ロック解除"))
 			ShimmerSliderComponent(properties: .init(placeholderText: "滑動解鎖"))
 			ShimmerSliderComponent(properties: .init(placeholderText: "الانزلاق لفتح القفل"))
 				.environment(\.layoutDirection, .rightToLeft)
@@ -32,7 +33,7 @@ struct ShimmerSliderProperties {
 	var textColor: Color = .init(white: 0.3)
 	
 	var backViewHeight: CGFloat = 88
-	var horizontalPadding: CGFloat = 30
+	var horizontalPadding: CGFloat = 20
 	var grooveOpacity: CGFloat = 0.9
 	var backOpacity: CGFloat = 0.7
 	

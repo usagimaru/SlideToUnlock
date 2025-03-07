@@ -29,7 +29,7 @@ struct DemoView: View {
 			VStack(spacing: 0) {
 				Spacer()
 				ShimmerSliderComponent(properties: .init(placeholderText: "slide to unlock"))
-				ShimmerSliderComponent(properties: .init(placeholderText: "スライドして解除"))
+				ShimmerSliderComponent(properties: .init(placeholderText: "ロック解除"))
 				ShimmerSliderComponent(properties: .init(placeholderText: "滑動解鎖"))
 				ShimmerSliderComponent(properties: .init(placeholderText: "الانزلاق لفتح القفل"))
 					.environment(\.layoutDirection, .rightToLeft)
