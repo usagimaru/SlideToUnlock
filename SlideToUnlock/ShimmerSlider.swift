@@ -10,41 +10,48 @@ import SwiftUI
 #Preview {
 	ZStack {
 		Rectangle()
-			.foregroundStyle(.green)
-			.brightness(-0.5)
+			.foregroundStyle(.orange)
+			.brightness(-0.3)
 			.ignoresSafeArea()
 		VStack(spacing: 0) {
-			ShimmerSliderComponent(placeholderText: "slide to unlock")
-			ShimmerSliderComponent(placeholderText: "スライドして解除")
-			ShimmerSliderComponent(placeholderText: "きらきらひかる")
-			ShimmerSliderComponent(placeholderText: "スライダーの溝よ")
+			ShimmerSliderComponent(properties: .init(placeholderText: "slide to unlock"))
+			ShimmerSliderComponent(properties: .init(placeholderText: "滑動解鎖"))
+			ShimmerSliderComponent(properties: .init(placeholderText: "الانزلاق لفتح القفل"))
+				.environment(\.layoutDirection, .rightToLeft)
+			ShimmerSliderComponent(properties: .init(placeholderText: "slide to unlock"))
+				.environment(\.layoutDirection, .rightToLeft)
 		}
 	}
+}
+
+struct ShimmerSliderProperties {
+	
+	var placeholderText: String
+	
+	var font: Font = .init(UIFont(name: "Helvetica Neue", size: 21)!)
+	var textColor: Color = .init(white: 0.3)
+	
+	var backViewHeight: CGFloat = 88
+	var horizontalPadding: CGFloat = 30
+	var grooveOpacity: CGFloat = 0.9
+	var backOpacity: CGFloat = 0.7
+	
+	var knobCornerRadius: CGFloat = 12
+	var knobSize: CGSize = .init(width: 68, height: 44)
+	var groovePadding: CGFloat = 4
+	
 }
 
 /// スライダー + 背景
 struct ShimmerSliderComponent: View {
 	
-	@State var backViewHeight: CGFloat = 88
-	@State var horizontalPadding: CGFloat = 30
-	@State var placeholderText: String
-	@State var grooveOpacity: CGFloat = 0.9
-	@State var backOpacity: CGFloat = 0.7
+	@State var properties: ShimmerSliderProperties
 	
 	var body: some View {
 		ZStack {
-			ShimmerSliderBackView(opacity: $backOpacity)
-				.frame(height: backViewHeight, alignment: .bottom)
-				.overlay {
-					// FIXME: 穴を開けたいが、パラメータを動的に取ってくる構造を考えるのが面倒なので、ハードコーディングした
-					RoundedRectangle(cornerRadius: 12 + 2)
-						//.foregroundStyle(.blue.opacity(0.8)) // for debug
-						.padding(.horizontal, horizontalPadding + 2)
-						.padding(.vertical, (backViewHeight - 44 - 4) / 2)
-						.blendMode(.destinationOut)
-				}
-			ShimmerSlider(placeholderText: placeholderText, opacity: $grooveOpacity)
-				.padding(.horizontal, horizontalPadding)
+			ShimmerSliderBackView(properties: properties, withGroove: true)
+			ShimmerSlider(properties: properties)
+				.padding(.horizontal, properties.horizontalPadding)
 		}
 	}
 	
@@ -53,11 +60,7 @@ struct ShimmerSliderComponent: View {
 /// スライダー
 struct ShimmerSlider: View {
 	
-	@State var placeholderText: String
-	@State var cornerRadius: CGFloat = 12
-	@State var knobSize: CGSize = .init(width: 68, height: 44)
-	@State var groovePadding: CGFloat = 4
-	@Binding var opacity: CGFloat
+	@State var properties: ShimmerSliderProperties
 	
 	@State private var isAnimated: Bool = false
 	@State private var offset: CGFloat = 0
@@ -65,25 +68,30 @@ struct ShimmerSlider: View {
 	
 	var body: some View {
 		ZStack {
-			SliderGroove(placeholderText: $placeholderText, cornerRadius: cornerRadius + groovePadding, shimmerOpacity: $shimmerOpacity)
-				.frame(height: knobSize.height + groovePadding * 2)
-				.opacity(opacity)
+			let grooveCornerRadius = properties.knobCornerRadius + properties.groovePadding - 1
+			let height = properties.knobSize.height + properties.groovePadding * 2
+			
+			// 溝
+			SliderGroove(properties: properties, shimmerOpacity: $shimmerOpacity)
+				.frame(height: height)
+				.opacity(properties.grooveOpacity)
 				.overlay {
 					GeometryReader { geo in
-						SliderKnob(cornerRadius: cornerRadius)
-							.frame(width: knobSize.width, height: knobSize.height)
-							.offset(x: offset, y: groovePadding)
+						// つまみ
+						SliderKnob(cornerRadius: properties.knobCornerRadius)
+							.frame(width: properties.knobSize.width, height: properties.knobSize.height)
+							.offset(x: offset, y: properties.groovePadding)
 							.gesture(
 								DragGesture()
 									.onChanged { gesture in
 										isAnimated = false
 										offset = min(
 											max(gesture.translation.width, 0),
-											geo.size.width - knobSize.width - groovePadding * 2
+											geo.size.width - properties.knobSize.width - properties.groovePadding * 2
 										)
 										
-										let adj = (geo.size.width - knobSize.width) / 2
-										shimmerOpacity = 1.0 - (offset / (geo.size.width - knobSize.width - groovePadding * 2 - adj))
+										let adj = (geo.size.width - properties.knobSize.width) / 2
+										shimmerOpacity = 1.0 - (offset / (geo.size.width - properties.knobSize.width - properties.groovePadding * 2 - adj))
 									}
 									.onEnded { _ in
 										isAnimated = true
@@ -91,12 +99,15 @@ struct ShimmerSlider: View {
 										shimmerOpacity = 1.0
 									}
 							)
-							.animation(.spring(response: 0.1, dampingFraction: 1.0, blendDuration: 0.3),
+							.animation(.spring(response: 0.2, dampingFraction: 1.0, blendDuration: 0),
 									   value: isAnimated)
-							.padding(.horizontal, 4)
+							.padding(.horizontal, properties.groovePadding)
+						// RTLレイアウトの時にドラッグ方向を最適化する
+							.flipsForRightToLeftLayoutDirection(true)
 					}
 				}
-				.clipShape(RoundedRectangle(cornerRadius: cornerRadius + groovePadding + 1))
+			// つまみの影が溝より外に出ないようにカットする
+				.clipShape(RoundedRectangle(cornerRadius: grooveCornerRadius + 1))
 		}
 	}
 	
@@ -105,7 +116,8 @@ struct ShimmerSlider: View {
 /// スライダー背景ビュー
 struct ShimmerSliderBackView: View {
 	
-	@Binding var opacity: CGFloat
+	@State var properties: ShimmerSliderProperties
+	@State var withGroove: Bool = false
 	
 	var body: some View {
 		ZStack {
@@ -118,30 +130,52 @@ struct ShimmerSliderBackView: View {
 						   startPoint: .top,
 						   endPoint: .bottom)
 		}
+		.frame(height: properties.backViewHeight)
 		.overlay {
 			GeometryReader { geo in
-				Rectangle()
-					.strokeBorder(Color.white, lineWidth: 1)
-					.frame(width: geo.size.width + 2)
-					.offset(x: -1)
-					.opacity(0.2)
-					.clipped()
+				ZStack {
+					Rectangle()
+						.frame(width: geo.size.width, height: 1)
+						.foregroundStyle(.white)
+						.blendMode(.overlay)
+						.opacity(0.6)
+					
+					Rectangle()
+						.frame(width: geo.size.width, height: 1)
+						.offset(y: geo.size.height - 1)
+						.foregroundStyle(.black)
+						.blendMode(.multiply)
+				}
 			}
 		}
-		.opacity(opacity)
+		.overlay {
+			Group {
+				if withGroove {
+					// 溝の裏に穴を開ける
+					RoundedRectangle(cornerRadius: properties.knobCornerRadius + properties.groovePadding - 2)
+						.padding(.horizontal, properties.horizontalPadding + 1)
+						.padding(.vertical, (properties.backViewHeight - properties.knobSize.height) / 2 - properties.groovePadding + 1)
+						.blendMode(.destinationOut)
+				}
+			}
+		}
+		.compositingGroup()
+		.opacity(properties.backOpacity)
+		.clipped()
 	}
 }
 
 /// 溝
 struct SliderGroove: View {
 	
-	@Binding var placeholderText: String
-	@State var cornerRadius: CGFloat = 12
+	@State var properties: ShimmerSliderProperties
 	@Binding var shimmerOpacity: CGFloat
+	
+	@Environment(\.layoutDirection) var layoutDirection: LayoutDirection
 	
 	var body: some View {
 		ZStack {
-			RoundedRectangle(cornerRadius: cornerRadius)
+			RoundedRectangle(cornerRadius: properties.knobCornerRadius)
 				.fill(
 					LinearGradient(stops: [
 						Gradient.Stop(color: Color(white: 0.05, opacity: 1.0), location: 0.0),
@@ -150,9 +184,8 @@ struct SliderGroove: View {
 								   startPoint: .top,
 								   endPoint: .bottom)
 				)
-				.clipShape(RoundedRectangle(cornerRadius: cornerRadius))
 				.overlay {
-					RoundedRectangle(cornerRadius: cornerRadius + 1)
+					RoundedRectangle(cornerRadius: properties.knobCornerRadius + properties.groovePadding)
 						.strokeBorder(
 							LinearGradient(gradient: Gradient(colors: [
 								Color(white: 0.50, opacity: 1.0),
@@ -165,9 +198,10 @@ struct SliderGroove: View {
 						.blendMode(.colorDodge)
 				}
 			
-			ShimmerText(text: placeholderText,
-						font: .init(UIFont(name: "Helvetica Neue", size: 23)!),
-						textColor: .init(white: 0.3))
+			ShimmerText(text: properties.placeholderText,
+						font: properties.font,
+						textColor: properties.textColor,
+						isRTL: layoutDirection == .rightToLeft ? true : false)
 			.opacity(shimmerOpacity)
 		}
 	}
@@ -177,7 +211,7 @@ struct SliderGroove: View {
 /// つまみ
 struct SliderKnob: View {
 	
-	@State var cornerRadius: CGFloat = 20
+	@State var cornerRadius: CGFloat
 	@State var arrowHandWidth: CGFloat = 13
 	@State var arrowHeadSize: CGFloat = 18
 	@State var paddingVertically: CGFloat = 10
@@ -198,7 +232,7 @@ struct SliderKnob: View {
 				VStack {
 					HStack {
 						ArrowView(arrowHandWidth: arrowHandWidth, arrowHeadSize: arrowHeadSize)
-							.offset(x: horizontalAdjustment)
+							.offset(x: 1.0)
 							.padding(.vertical, paddingVertically)
 							.padding(.horizontal, paddingHorizontally)
 					}
@@ -217,8 +251,8 @@ struct SliderKnob: View {
 /// 矢印
 struct ArrowView: View {
 	
-	@State var arrowHandWidth: CGFloat = 40
-	@State var arrowHeadSize: CGFloat = 60
+	@State var arrowHandWidth: CGFloat
+	@State var arrowHeadSize: CGFloat
 	@State var bevelDepth: CGFloat = 0.5
 	@State var bevelBlurSize: CGFloat = 0.5
 	@State var bevelOpacity: CGFloat = 0.8

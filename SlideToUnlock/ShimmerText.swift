@@ -11,9 +11,16 @@ import SwiftUI
 	ZStack {
 		Rectangle()
 			.foregroundStyle(.black)
-		VStack(spacing: 20) {
+		VStack(spacing: 12) {
 			ShimmerText(text: "slide to unlock", textColor: .gray, _debug: true)
 			ShimmerText(text: "slide to unlock", textColor: .gray)
+			ShimmerText(text: "slide to unlock", textColor: .orange, masking: false)
+			ShimmerText(text: "スライドしてロック解除", textColor: .gray, _debug: true)
+			ShimmerText(text: "スライドしてロック解除", textColor: .gray)
+			ShimmerText(text: "スライドしてロック解除", textColor: .orange, masking: false)
+			ShimmerText(text: "الانزلاق لفتح القفل", textColor: .gray, isRTL: true, _debug: true)
+			ShimmerText(text: "الانزلاق لفتح القفل", textColor: .gray, isRTL: true)
+			ShimmerText(text: "الانزلاق لفتح القفل", textColor: .orange, masking: false, isRTL: true)
 		}
 	}
 }
@@ -21,15 +28,16 @@ import SwiftUI
 struct ShimmerText: View {
 	
 	@State var text: String
-	@State var font: Font = .system(size: 21)
+	@State var font: Font = .system(size: 24)
 	@State var textColor: Color
 	@State var shimmerColors: [Gradient.Stop]?
 	@State var shimmerOffset: CGFloat = 10
 	@State var horizontalPadding: CGFloat = 0
 	@State var verticalPadding: CGFloat = 0
 	@State var animationDuration: TimeInterval = 1.5
-	@State var shimmerBlendMode: BlendMode = .colorDodge
+	@State var shimmerBlendMode: BlendMode = .overlay
 	@State var masking: Bool = true
+	@State var isRTL = false
 	
 	@State var _debug: Bool = false
 	@State private var shimmering: Bool = true
@@ -78,6 +86,7 @@ struct ShimmerText: View {
 				}
 		}
 		.border(_debug ? .red : .clear)
+		.environment(\.layoutDirection, isRTL ? .rightToLeft : .leftToRight)
 	}
 	
 }
