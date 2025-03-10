@@ -1,6 +1,6 @@
 # SlideToUnlock
 
-A replication of the “slide to unlock” UI (slider and shimmer text) that existed before iOS 6, it is completely made with SwiftUI. Remember the feel of pixel materials in those days and soak in nostalgia.
+A replication of the “slide to unlock” UI (slider and shimmer text) that existed before iOS 6 era, it is completely made with SwiftUI. Remember the feel of pixel materials in those days and soak in nostalgia.
 
 <img src="./screenshot.jpg" width=500> 
 
